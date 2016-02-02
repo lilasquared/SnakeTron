@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SnakeTron</title>
+
+  <!-- WinJS references -->
+  <link href="WinJS/css/ui-dark.css" rel="stylesheet" />
+  <script src="WinJS/js/base.js"></script>
+  <script src="WinJS/js/ui.js"></script>
+  <script src="/scripts/angular.min.js"></script>
+  <script src="/scripts/angular-winjs.js"></script>
+  <script src="/scripts/angular-ui-router.min.js"></script>
+
+  <!-- SnakeTron references -->
+  <link href="/css/default.css" rel="stylesheet" />
+  <script src="/js/default.js"></script>
+  <script src="/js/st.js"></script>
+  <script src="js/st.config.js"></script>
+  <script src="js/controllers/st.app-controller.js"></script>
+  <script src="js/controllers/st.game-controller.js"></script>
+  <script src="js/models/st.snake-model.js"></script>
+</head>
+<body class="win-type-body" ng-app="snakeTron" ng-controller="AppController as vm" ng-keydown="vm.keyPress($event)">
+  <div ui-view></div>
+</body>
+</html>
