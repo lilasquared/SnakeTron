@@ -1,25 +1,22 @@
 ﻿(function (ng) {
-
   'use strict';
 
-  const inject = ['$interval', '$scope', 'Snake'];
+  const inject = ['$scope', 'Field'];
 
-  function GameController($interval, $scope, Snake) {
-    var vm = this;
-    vm.snake = new Snake(200, 200, 20);
+  function GameController($scope, Field) {
+    const vm = this;
 
-    $interval(function () {
-      vm.snake.move();
-    }, 150);
+    vm.field = new Field(1);
+
+    vm.field.snakes[0].start();
 
     vm.changeDir = changeDir;
 
-    $scope.$on('st.keyPress', changeDir)
+    $scope.$on('st.keyPress', changeDir);
 
     function changeDir(event, args) {
-      console.log(vm.snake.DIRECTIONS[args.keyCode]);
-      if (vm.snake.DIRECTIONS.hasOwnProperty(args.keyCode)) {
-        vm.snake.direction = vm.snake.DIRECTIONS[args.keyCode]
+      if (vm.field.snakes[0].DIRECTIONS.hasOwnProperty(args.keyCode)) {
+        vm.field.snakes[0].direction = vm.field.snakes[0].DIRECTIONS[args.keyCode]
       }
     }
   }

@@ -1,3 +1,5 @@
-﻿<div class="field">
-  <div class="snakeBody" ng-repeat="body in vm.snake.body" ng-style="body.style"></div>
+﻿<div class="field" ng-style="vm.field.style">
+  <div ng-repeat="snake in vm.field.snakes">
+    <div class="snakeBody" ng-repeat="body in snake.body" ng-style="body.style"></div>
+  </div>
 </div>

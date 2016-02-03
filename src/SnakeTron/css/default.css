@@ -1,4 +1,16 @@
-﻿.snakeBody {
+﻿body {
+  height: 100%;
+  width: 100%;
+}
+
+.field {
+  position: absolute;
+  margin: 0 auto;
   background: white;
-  outline: 1px solid black;
+}
+
+.snakeBody {
+  background: black;
+  outline: 1px solid white;
+  position: absolute;
 }

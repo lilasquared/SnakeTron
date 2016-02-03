@@ -6,21 +6,74 @@
     '39': { x: 1, y: 0 }
   }
 
-  function SnakeFactory() {
-    function Snake(x, y, length) {
-      this.dim = 25;
-      this.direction = this.DIRECTIONS.RIGHT;
-      this.body = [new SnakeBody(x, y, this.dim)];
+  const inject = ['$interval']
 
-      for (var i = 1; i < length; i++) {
-        this.body.push(this.body[0].add());
+  function SnakeFactory($interval) {
+    class Snake {
+      constructor(x, y, length, field) {
+        this.x = x;
+        this.y = y;
+        this.dim = 25;
+        this.slowness = 200;
+        this.direction = this.DIRECTIONS.RIGHT;
+        this.body = [new SnakeBody(x, y, this.dim)];
+        this.field = field;
+
+        for (var i = 1; i < length; i++) {
+          this.body.push(this.body[0].add());
+        }
+      }
+
+      start() {
+        $interval.cancel(this.moveInterval);
+        this.moveInterval = $interval(() => {
+          this.move();
+        }, this.slowness);
+      }
+
+      move() {
+        let x = this.body[0].x + (this.dim + 1) * this.direction.x;
+        let y = this.body[0].y + (this.dim + 1) * this.direction.y;
+        if (x > this.field.width) {
+          x = this.field.width - x;
+        }
+        this.body[0].move(x, y);
       }
     }
 
-    Snake.prototype.move = function () {
-      let x = this.body[0].x + (this.dim + 1) * this.direction.x;
-      let y = this.body[0].y + (this.dim + 1) * this.direction.y;
-      this.body[0].move(x, y);
+    class SnakeBody {
+      constructor(x, y, dim) {
+        this.x = x;
+        this.y = y;
+        this.dim = dim;
+        this.next = null;
+      }
+
+      add() {
+        if (this.next === null) {
+          this.next = new SnakeBody(this.x, this.y, this.dim);
+          return this.next;
+        } else {
+          return this.next.add();
+        }
+      }
+
+      move(x, y) {
+        let oldX = this.x;
+        let oldY = this.y;
+        this.x = x;
+        this.y = y;
+        this.style = {
+          height: this.dim + 'px',
+          width: this.dim + 'px',
+          top: this.y + 'px',
+          left: this.x + 'px'
+        }
+
+        if (this.next !== null) {
+          this.next.move(oldX, oldY);
+        }
+      }
     }
 
     Snake.prototype.DIRECTIONS = {
@@ -34,41 +87,9 @@
       '39': DIRECTIONS['39']
     }
 
-    function SnakeBody(x, y, dim) {
-      this.x = x;
-      this.y = y;
-      this.dim = dim;
-      this.next = null;
-    }
-
-    SnakeBody.prototype.add = function () {
-      if (this.next === null) {
-        this.next = new SnakeBody(this.x, this.y, this.dim);
-        return this.next;
-      } else {
-        return this.next.add();
-      }
-    }
-
-    SnakeBody.prototype.move = function (x, y) {
-      let oldX = this.x;
-      let oldY = this.y;
-      this.x = x;
-      this.y = y;
-      this.style = {
-        position: 'absolute',
-        height: this.dim + 'px',
-        width: this.dim + 'px',
-        top: this.y + 'px',
-        left: this.x + 'px'
-      }
-      if (this.next !== null) {
-        this.next.move(oldX, oldY);
-      }
-    }
-
-    return (Snake);
+    return Snake;
   }
+
 
   ng.module('snakeTron')
     .factory('Snake', SnakeFactory);
